@@ -43,36 +43,40 @@ const Login = (props) => {
     isValid: null,
   });
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log('Checking form validity!');
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  //객체 디스트럭처링 : useEffect를 최적화하고 이펙트가 실행되는 것을 피하기 위해 필요하다.
+  const { isValid: emailIsValid } = emailState; //isWalid 추출하고 별명 붙임, 그리고 같은 이름의 새 상수에 저장
+  const { isValid: passwordIsValid } = passwordState;
 
-  //   return () => {
-  //     console.log('CLEANUP');
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword]);
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log('Checking form validity!');
+      setFormIsValid(
+        emailIsValid && passwordIsValid
+      );
+    }, 500);
+
+    return () => {
+      console.log('CLEANUP');
+      clearTimeout(identifier);
+    };
+  }, [emailIsValid, passwordIsValid]); //값만 변경되고 유효성이 변경되지 않으면 이펙트 다시 실행하지 않음
 
   //이메일 함수
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: 'USER_INPUT', val: event.target.value });
 
-    setFormIsValid(
-      event.target.value.includes('@') && passwordState.isValid
-    );
+    // setFormIsValid(
+    //   event.target.value.includes('@') && passwordState.isValid
+    // );
   };
 
   //비밀번호 함수
   const passwordChangeHandler = (event) => {
     dispatchPassword({ type: 'USER_INPUT', val: event.target.value })
 
-    setFormIsValid(
-      emailState.isValid && event.target.value.trim().length > 6
-    );
+    // setFormIsValid(
+    //   emailState.isValid && event.target.value.trim().length > 6
+    // );
   };
 
   const validateEmailHandler = () => {
