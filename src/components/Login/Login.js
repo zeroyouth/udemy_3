@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
+import AuthContext from '../../store/auth-context';
 
 //이메일 리듀서
 const emailReducer = (state, action) => {
@@ -42,6 +43,8 @@ const Login = (props) => {
     value: '',
     isValid: null,
   });
+
+  const authCtx = useContext(AuthContext);
 
   //객체 디스트럭처링 : useEffect를 최적화하고 이펙트가 실행되는 것을 피하기 위해 필요하다.
   const { isValid: emailIsValid } = emailState; //isWalid 추출하고 별명 붙임, 그리고 같은 이름의 새 상수에 저장
@@ -89,7 +92,7 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    authCtx.onLogin(emailState.value, passwordState.value);
   };
 
   return (
@@ -99,7 +102,7 @@ const Login = (props) => {
           className={`${classes.control} ${emailState.isValid === false ? classes.invalid : ''
             }`}
         >
-          <label htmlFor="email">E-Mail</label>
+          <label htmlFor="email">📧 E-Mail</label>
           <input
             type="email"
             id="email"
@@ -112,7 +115,7 @@ const Login = (props) => {
           className={`${classes.control} ${passwordState.isValid === false ? classes.invalid : ''
             }`}
         >
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">🧭 Password</label>
           <input
             type="password"
             id="password"
